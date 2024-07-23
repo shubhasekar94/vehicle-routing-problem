@@ -22,7 +22,9 @@ type Load struct {
 
 func main() {
 	loads := ParseInput()
-	fmt.Println(loads)
+	for _, l := range(*loads) {
+		fmt.Printf("[%d]\n", l.LoadNumber)
+	}
 }
 
 func ParseInput() *[]Load {
@@ -33,17 +35,21 @@ func ParseInput() *[]Load {
 	}
 	contentString := string(content)
 	lines := strings.Split(contentString, "\n")
-	loads := make([]Load, len(lines)-1)
-	for i, line := range lines[1:] {
-		loads[i] = Load{}
+	loads := []Load{}
+	for _, line := range lines[1:] {
+		if line == "" {
+			continue
+		}
+		newLoad := Load{}
 		splitLine := strings.Split(line, " ")
 		loadNumber, err := strconv.Atoi(splitLine[0])
 		if err != nil {
 			log.Fatal(err)
 		}
-		loads[i].LoadNumber = loadNumber
-		loads[i].Pickup = ParsePoint(splitLine[1])
-		loads[i].Dropoff = ParsePoint(splitLine[2])
+		newLoad.LoadNumber = loadNumber
+		newLoad.Pickup = ParsePoint(splitLine[1])
+		newLoad.Dropoff = ParsePoint(splitLine[2])
+		loads = append(loads, newLoad)
 	}
 	return &loads
 }

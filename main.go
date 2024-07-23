@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -22,12 +21,12 @@ type Load struct {
 
 func main() {
 	loads := ParseInput()
-	for _, l := range(*loads) {
-		fmt.Printf("[%d]\n", l.LoadNumber)
-	}
+	schedules := GetDummySchedules(loads)
+	GetTotalCost(loads, schedules)
+	PrintSchedules(schedules)
 }
 
-func ParseInput() *[]Load {
+func ParseInput() map[int]Load {
 	fileName := os.Args[1]
 	content, err := ioutil.ReadFile(fileName)
 	if err != nil {
@@ -35,7 +34,7 @@ func ParseInput() *[]Load {
 	}
 	contentString := string(content)
 	lines := strings.Split(contentString, "\n")
-	loads := []Load{}
+	loads := make(map[int]Load)
 	for _, line := range lines[1:] {
 		if line == "" {
 			continue
@@ -49,9 +48,9 @@ func ParseInput() *[]Load {
 		newLoad.LoadNumber = loadNumber
 		newLoad.Pickup = ParsePoint(splitLine[1])
 		newLoad.Dropoff = ParsePoint(splitLine[2])
-		loads = append(loads, newLoad)
+		loads[loadNumber] = newLoad
 	}
-	return &loads
+	return loads
 }
 
 func ParsePoint(s string) Point {

@@ -1,12 +1,12 @@
 package main
 
 import (
-	"os"
+	"fmt"
 	"io/ioutil"
 	"log"
-	"fmt"
-	"strings"
+	"os"
 	"strconv"
+	"strings"
 )
 
 type Point struct {
@@ -16,8 +16,8 @@ type Point struct {
 
 type Load struct {
 	LoadNumber int
-	Pickup Point
-	Dropoff Point
+	Pickup     Point
+	Dropoff    Point
 }
 
 func main() {
@@ -34,7 +34,7 @@ func ParseInput() *[]Load {
 	contentString := string(content)
 	lines := strings.Split(contentString, "\n")
 	loads := []Load{}
-	for _, line := range(lines[1:]) {
+	for _, line := range lines[1:] {
 		newLoad := Load{}
 		splitLine := strings.Split(line, " ")
 		loadNumber, err := strconv.Atoi(splitLine[0])
@@ -50,7 +50,7 @@ func ParseInput() *[]Load {
 }
 
 func ParsePoint(s string) Point {
-	noParens := s[1:len(s)-1]
+	noParens := s[1 : len(s)-1]
 	coords := strings.Split(noParens, ",")
 	x, err := strconv.ParseFloat(coords[0], 64)
 	if err != nil {

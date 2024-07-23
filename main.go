@@ -33,18 +33,17 @@ func ParseInput() *[]Load {
 	}
 	contentString := string(content)
 	lines := strings.Split(contentString, "\n")
-	loads := []Load{}
-	for _, line := range lines[1:] {
-		newLoad := Load{}
+	loads := make([]Load, len(lines)-1)
+	for i, line := range lines[1:] {
+		loads[i] = Load{}
 		splitLine := strings.Split(line, " ")
 		loadNumber, err := strconv.Atoi(splitLine[0])
 		if err != nil {
 			log.Fatal(err)
 		}
-		newLoad.LoadNumber = loadNumber
-		newLoad.Pickup = ParsePoint(splitLine[1])
-		newLoad.Dropoff = ParsePoint(splitLine[2])
-		loads = append(loads, newLoad)
+		loads[i].LoadNumber = loadNumber
+		loads[i].Pickup = ParsePoint(splitLine[1])
+		loads[i].Dropoff = ParsePoint(splitLine[2])
 	}
 	return &loads
 }

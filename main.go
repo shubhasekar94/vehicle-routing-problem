@@ -29,7 +29,7 @@ func main() {
 	lowestCost := math.MaxFloat64
 	var finalSchedules [][]int
 	start := time.Now()
-	for time.Since(start) < 10*time.Second {
+	for time.Since(start) < 15*time.Second {
 		numDrivers := rand.Intn(numLoads) + 1
 		assignedLoads := GetAssignedLoadsCluster(loads, numDrivers)
 		cost, candidate, err := ProcessSchedules(loads, assignedLoads)

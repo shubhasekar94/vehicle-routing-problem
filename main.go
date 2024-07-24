@@ -28,7 +28,7 @@ func main() {
 	lowestCost := math.MaxFloat64
 	var finalSchedules [][]int
 	for numDrivers <= numLoads {
-		assignedLoads := GetAssignedLoads(loads, numDrivers)
+		assignedLoads := GetAssignedLoadsRandom(loads, numDrivers)
 		schedules := [][]int{}
 		for _, al := range(assignedLoads) {
 			schedules = append(schedules, GetNearestNeighborRoute(loads, al))

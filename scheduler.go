@@ -4,7 +4,7 @@ import (
 	"math"
 )
 
-func GetAssignedLoads(loads map[int]Load, numDrivers int) [][]int {
+func GetAssignedLoadsRandom(loads map[int]Load, numDrivers int) [][]int {
 	assignedLoads := make([][]int, numDrivers)
 	driverIndex := 0
 	for _, l := range(loads) {

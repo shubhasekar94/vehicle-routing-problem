@@ -29,7 +29,7 @@ func main() {
 	lowestCost := math.MaxFloat64
 	var finalSchedules [][]int
 	start := time.Now()
-	for lowestCost > 50000 && time.Since(start) < 20*time.Second {
+	for time.Since(start) < 27*time.Second {
 		numDrivers := rand.Intn(numLoads)+1
 		assignedLoads := GetAssignedLoadsCluster(loads, numDrivers)
 		schedules := [][]int{}

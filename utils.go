@@ -9,13 +9,16 @@ func GetDistance(p1, p2 Point) float64 {
 	return math.Sqrt(math.Pow((p2.X - p1.X), 2) + math.Pow((p2.Y - p1.Y), 2))
 }
 
-func GetTotalCost(loads map[int]Load, schedules [][]int) float64 {
+func GetTotalCost(loads map[int]Load, schedules [][]int) (float64, error) {
 	cost := float64(0)
 	for _, schedule := range(schedules) {
 		routeCost := GetScheduleCost(loads, schedule)
+		if routeCost > float64(12 * 60) {
+			return 0, fmt.Errorf("drive time exceeded 12 hours")
+		}
 		cost = cost + routeCost + 500
 	}
-	return cost
+	return cost, nil
 }
 
 func GetScheduleCost(loads map[int]Load, schedule []int) float64 {

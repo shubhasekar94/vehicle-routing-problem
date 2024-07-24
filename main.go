@@ -27,20 +27,25 @@ func main() {
 	numDrivers := 1
 	lowestCost := math.MaxFloat64
 	var finalSchedules [][]int
-	for numDrivers < numLoads {
+	for numDrivers <= numLoads {
 		assignedLoads := GetAssignedLoads(loads, numDrivers)
 		schedules := [][]int{}
 		for _, al := range(assignedLoads) {
 			schedules = append(schedules, GetNearestNeighborRoute(loads, al))
 		}
-		currentCost := GetTotalCost(loads, schedules)
-		log.Printf("routing %d drivers with cost %f", numDrivers, currentCost)
+		currentCost, err := GetTotalCost(loads, schedules)
+		if err != nil {
+			numDrivers = numDrivers + 1
+			continue
+		}
+		// log.Printf("routing %d drivers with cost %f", numDrivers, currentCost)
 		if currentCost < lowestCost {
 			lowestCost = currentCost
 			finalSchedules = schedules
 		}
 		numDrivers = numDrivers + 1
 	}
+	log.Printf("lowest cost of %f to deliver %d loads was achieved with %d drivers", lowestCost, numLoads, len(finalSchedules))
 	formattedSchedules := FormatSchedules(finalSchedules)
 	fmt.Print(formattedSchedules)
 }

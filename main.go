@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -22,19 +23,25 @@ type Load struct {
 
 func main() {
 	loads := ParseInput()
-	numDrivers := 2
-
-	assignedLoads := GetAssignedLoads(loads, numDrivers)
-	log.Printf("assigned loads are %v", assignedLoads)
-
-	schedules := [][]int{}
-	for _, al := range(assignedLoads) {
-		schedules = append(schedules, GetNearestNeighborRoute(loads, al))
+	numLoads := len(loads)
+	numDrivers := 1
+	lowestCost := math.MaxFloat64
+	var finalSchedules [][]int
+	for numDrivers < numLoads {
+		assignedLoads := GetAssignedLoads(loads, numDrivers)
+		schedules := [][]int{}
+		for _, al := range(assignedLoads) {
+			schedules = append(schedules, GetNearestNeighborRoute(loads, al))
+		}
+		currentCost := GetTotalCost(loads, schedules)
+		log.Printf("routing %d drivers with cost %f", numDrivers, currentCost)
+		if currentCost < lowestCost {
+			lowestCost = currentCost
+			finalSchedules = schedules
+		}
+		numDrivers = numDrivers + 1
 	}
-	log.Printf("nn scheduler came up with %v", schedules)
-	cost := GetTotalCost(loads, schedules)
-	log.Printf("cost of schedule is %v", cost)
-	formattedSchedules := FormatSchedules(schedules)
+	formattedSchedules := FormatSchedules(finalSchedules)
 	fmt.Print(formattedSchedules)
 }
 

@@ -5,9 +5,11 @@ import (
 	"io/ioutil"
 	"log"
 	"math"
+	"math/rand"
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type Point struct {
@@ -24,26 +26,44 @@ type Load struct {
 func main() {
 	loads := ParseInput()
 	numLoads := len(loads)
-	numDrivers := 1
 	lowestCost := math.MaxFloat64
 	var finalSchedules [][]int
-	for numDrivers <= numLoads {
-		assignedLoads := GetAssignedLoadsRandom(loads, numDrivers)
+	start := time.Now()
+	for lowestCost > 50000 && time.Since(start) < 20*time.Second {
+		numDrivers := rand.Intn(numLoads)+1
+		assignedLoads := GetAssignedLoadsCluster(loads, numDrivers)
 		schedules := [][]int{}
 		for _, al := range assignedLoads {
 			schedules = append(schedules, GetNearestNeighborRoute(loads, al))
 		}
 		currentCost, err := GetTotalCost(loads, schedules)
 		if err != nil {
-			numDrivers = numDrivers + 1
 			continue
 		}
-		// log.Printf("routing %d drivers with cost %f", numDrivers, currentCost)
 		if currentCost < lowestCost {
 			lowestCost = currentCost
 			finalSchedules = schedules
 		}
-		numDrivers = numDrivers + 1
+	}
+	if len(finalSchedules) == 0 {
+		numDrivers := 1
+		for numDrivers <= numLoads {
+			assignedLoads := GetAssignedLoadsRandom(loads, numDrivers)
+			schedules := [][]int{}
+			for _, al := range assignedLoads {
+				schedules = append(schedules, GetNearestNeighborRoute(loads, al))
+			}
+			currentCost, err := GetTotalCost(loads, schedules)
+			if err != nil {
+				numDrivers = numDrivers + 1
+				continue
+			}
+			if currentCost < lowestCost {
+				lowestCost = currentCost
+				finalSchedules = schedules
+			}
+			numDrivers = numDrivers + 1
+		}
 	}
 	log.Printf("lowest cost of %f to deliver %d loads was achieved with %d drivers", lowestCost, numLoads, len(finalSchedules))
 	formattedSchedules := FormatSchedules(finalSchedules)

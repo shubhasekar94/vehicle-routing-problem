@@ -30,7 +30,7 @@ func main() {
 	for numDrivers <= numLoads {
 		assignedLoads := GetAssignedLoadsRandom(loads, numDrivers)
 		schedules := [][]int{}
-		for _, al := range(assignedLoads) {
+		for _, al := range assignedLoads {
 			schedules = append(schedules, GetNearestNeighborRoute(loads, al))
 		}
 		currentCost, err := GetTotalCost(loads, schedules)

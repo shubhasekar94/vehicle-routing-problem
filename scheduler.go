@@ -20,8 +20,8 @@ func GetAssignedLoadsCluster(loads map[int]Load, numDrivers int) [][]int {
 	i := 0
 	// set up N randomly chosen centroids
 	for i < numDrivers {
-		randX := float64(rand.Intn(200)-100)
-		randY := float64(rand.Intn(200)-100)
+		randX := float64(rand.Intn(200) - 100)
+		randY := float64(rand.Intn(200) - 100)
 		centroids = append(centroids, Point{randX, randY})
 		i = i + 1
 	}
@@ -62,7 +62,7 @@ func GetAssignedLoadsCluster(loads map[int]Load, numDrivers int) [][]int {
 				sumX = sumX + point.X
 				sumY = sumY + point.Y
 			}
-			centroids[i] = Point{sumX/numPoints, sumY/numPoints}
+			centroids[i] = Point{sumX / numPoints, sumY / numPoints}
 		}
 		numIterations = numIterations + 1
 	}

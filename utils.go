@@ -43,6 +43,18 @@ func GetScheduleCost(loads map[int]Load, schedule []int) float64 {
 	return cost
 }
 
+func ProcessSchedules(loads map[int]Load, assignedLoads [][]int) (float64, [][]int, error) {
+	schedules := [][]int{}
+	for _, al := range assignedLoads {
+		schedules = append(schedules, GetNearestNeighborRoute(loads, al))
+	}
+	currentCost, err := GetTotalCost(loads, schedules)
+	if err != nil {
+		return 0, schedules, err
+	}
+	return currentCost, schedules, nil
+}
+
 func FormatSchedules(schedules [][]int) string {
 	output := ""
 	for _, schedule := range schedules {

@@ -29,40 +29,23 @@ func main() {
 	lowestCost := math.MaxFloat64
 	var finalSchedules [][]int
 	start := time.Now()
-	for time.Since(start) < 27*time.Second {
+	for time.Since(start) < 10*time.Second {
 		numDrivers := rand.Intn(numLoads)+1
 		assignedLoads := GetAssignedLoadsCluster(loads, numDrivers)
-		schedules := [][]int{}
-		for _, al := range assignedLoads {
-			schedules = append(schedules, GetNearestNeighborRoute(loads, al))
-		}
-		currentCost, err := GetTotalCost(loads, schedules)
-		if err != nil {
-			continue
-		}
-		if currentCost < lowestCost {
-			lowestCost = currentCost
-			finalSchedules = schedules
+		cost, candidate, err := ProcessSchedules(loads, assignedLoads)
+		if err == nil && cost < lowestCost {
+			lowestCost = cost
+			finalSchedules = candidate
 		}
 	}
 	if len(finalSchedules) == 0 {
-		numDrivers := 1
-		for numDrivers <= numLoads {
-			assignedLoads := GetAssignedLoadsRandom(loads, numDrivers)
-			schedules := [][]int{}
-			for _, al := range assignedLoads {
-				schedules = append(schedules, GetNearestNeighborRoute(loads, al))
+		for i := 1; i <= numLoads; i++ {
+			assignedLoads := GetAssignedLoadsRandom(loads, i)
+			cost, candidate, err := ProcessSchedules(loads, assignedLoads)
+			if err == nil && cost < lowestCost {
+				lowestCost = cost
+				finalSchedules = candidate
 			}
-			currentCost, err := GetTotalCost(loads, schedules)
-			if err != nil {
-				numDrivers = numDrivers + 1
-				continue
-			}
-			if currentCost < lowestCost {
-				lowestCost = currentCost
-				finalSchedules = schedules
-			}
-			numDrivers = numDrivers + 1
 		}
 	}
 	log.Printf("lowest cost of %f to deliver %d loads was achieved with %d drivers", lowestCost, numLoads, len(finalSchedules))

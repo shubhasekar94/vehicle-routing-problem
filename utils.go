@@ -34,8 +34,15 @@ func GetScheduleCost(loads map[int]Load, schedule []int) float64 {
 	return cost
 }
 
-func PrintSchedules(schedules [][]int) {
+func FormatSchedules(schedules [][]int) string {
+	output := ""
 	for _, schedule := range(schedules) {
-		fmt.Println(schedule)
+		line := ""
+		for _, loadNum := range(schedule) {
+			line = line + fmt.Sprintf("%d,", loadNum)
+		}
+		line = "[" + line[:len(line)-1] + "]\n"
+		output = output + line
 	}
+	return output
 }

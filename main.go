@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -21,9 +22,20 @@ type Load struct {
 
 func main() {
 	loads := ParseInput()
-	schedules := GetDummySchedules(loads)
-	GetTotalCost(loads, schedules)
-	PrintSchedules(schedules)
+	numDrivers := 2
+
+	assignedLoads := GetAssignedLoads(loads, numDrivers)
+	log.Printf("assigned loads are %v", assignedLoads)
+
+	schedules := [][]int{}
+	for _, al := range(assignedLoads) {
+		schedules = append(schedules, GetNearestNeighborRoute(loads, al))
+	}
+	log.Printf("nn scheduler came up with %v", schedules)
+	cost := GetTotalCost(loads, schedules)
+	log.Printf("cost of schedule is %v", cost)
+	formattedSchedules := FormatSchedules(schedules)
+	fmt.Print(formattedSchedules)
 }
 
 func ParseInput() map[int]Load {
